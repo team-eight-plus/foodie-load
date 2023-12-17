@@ -5,6 +5,9 @@ import com.sejun.app.client.LocationSearchApiForNaver
 import com.sejun.app.client.dto.*
 import com.sejun.app.client.dto.naver.LocationSearchResponseForNaver
 import com.sejun.app.client.dto.naver.SearchItemByNaver
+import com.sejun.app.exception.CustomErrorStatus
+import com.sejun.app.exception.CustomException
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
@@ -15,10 +18,16 @@ class SearchService(
     val locationSearchApiForKakao: LocationSearchApiForKakao
 ) {
 
-    fun search(request: LocationSearchRequest): List<Any> {
+    fun search(request: LocationSearchRequest): LocationSearchResponse? {
         // naver API 요청
         val searchResponse = requestNaverLocationSearchApi(request)
-        return ArrayList<Any>()
+
+        if (searchResponse.statusCode == HttpStatus.OK) {
+            val test = searchResponse.body
+            return searchResponse.body
+        }
+
+        throw CustomException(CustomErrorStatus.NO_SEARCH)
     }
 
     fun requestNaverLocationSearchApi(request: LocationSearchRequest):
