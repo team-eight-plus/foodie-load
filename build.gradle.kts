@@ -6,6 +6,8 @@ plugins {
     kotlin("jvm") version "1.9.20"
     kotlin("plugin.spring") version "1.9.20"
     kotlin("plugin.jpa") version "1.9.20"
+    kotlin("kapt") version "${KotlinVersion.CURRENT}"
+    idea
 }
 
 group = "com.sejun"
@@ -30,6 +32,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    //Querydsl
+    implementation("com.querydsl:querydsl-jpa:5.0.0:jakarta")
+    kapt("com.querydsl:querydsl-apt:5.0.0:jakarta")
+    kapt("jakarta.annotation:jakarta.annotation-api")
+    kapt("jakarta.persistence:jakarta.persistence-api")
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")

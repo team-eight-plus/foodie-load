@@ -1,8 +1,10 @@
 search:
   client:
-    id: x6tmsVBuLuVZnCtS0iI0
-    key: tFjClHjwzs
-
+    naver:
+      id: x6tmsVBuLuVZnCtS0iI0
+      key: tFjClHjwzs
+    kakao:
+      key: KakaoAK 4013eda58e386eb56c1a9f9ebf68d488
 spring:
   h2:
     console:

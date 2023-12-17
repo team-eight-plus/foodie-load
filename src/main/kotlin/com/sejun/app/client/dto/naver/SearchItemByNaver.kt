@@ -1,4 +1,4 @@
-package com.sejun.app.client.dto
+package com.sejun.app.client.dto.naver
 
 data class SearchItemByNaver (
     val title: String,
