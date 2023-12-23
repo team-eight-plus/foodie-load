@@ -1,42 +1,23 @@
 package com.sejun.app.search.application
 
-import com.sejun.app.client.LocationSearchApiForKakao
-import com.sejun.app.client.LocationSearchApiForNaver
 import com.sejun.app.client.dto.*
-import com.sejun.app.client.dto.naver.LocationSearchResponseForNaver
-import com.sejun.app.client.dto.naver.SearchItemByNaver
-import com.sejun.app.exception.CustomErrorStatus
-import com.sejun.app.exception.CustomException
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import com.sejun.app.component.SearchManager
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.springframework.stereotype.Service
-import java.util.*
+import java.sql.DriverManager.println
 
 @Service
 class SearchService(
-    val locationSearchApiForNaver: LocationSearchApiForNaver,
-    val locationSearchApiForKakao: LocationSearchApiForKakao
+    val searchManager: SearchManager
 ) {
 
     fun search(request: LocationSearchRequest): LocationSearchResponse? {
         // naver API 요청
-        val searchResponse = requestNaverLocationSearchApi(request)
+        // 키워드 저장
+        val response = searchManager.search(request)
 
-        if (searchResponse.statusCode == HttpStatus.OK) {
-            val test = searchResponse.body
-            return searchResponse.body
-        }
-
-        throw CustomException(CustomErrorStatus.NO_SEARCH)
-    }
-
-    fun requestNaverLocationSearchApi(request: LocationSearchRequest):
-            ResponseEntity<LocationSearchResponse> {
-        return locationSearchApiForNaver.search(request)
-    }
-
-    fun requestKakaoLocationSearchApi(request: LocationSearchRequest):
-            ResponseEntity<LocationSearchResponse> {
-        return locationSearchApiForKakao.search(request)
+        return response.body
     }
 }

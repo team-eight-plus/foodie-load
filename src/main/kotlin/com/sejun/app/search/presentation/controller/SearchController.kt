@@ -23,7 +23,7 @@ class SearchController(
     @GetMapping("/search")
     fun search(@RequestParam query: String): Response {
         return Response(200, "success",
-            searchService.search(LocationSearchRequestForNaver(query = query)))
+            searchService.search(LocationSearchRequestForKakao(query = query)))
     }
 
     /**

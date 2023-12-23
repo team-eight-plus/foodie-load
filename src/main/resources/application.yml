@@ -23,3 +23,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      search:
+        slidingWindowSize: 1
+        permittedNumberOfCallsInHalfOpenState: 1
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        ringBufferSizeInClosedState: 10
+        ringBufferSizeInHalfOpenState: 30
+        waitDurationInOpenState: 10000ms
+        failureRateThreshold: 20
+        registerHealthIndicator: false

@@ -26,6 +26,14 @@ class LocationSearchApiForNaver(
     }
 
     fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponse> {
+        val response =
+            RestTemplate().exchange(requestEntity, LocationSearchResponseForNaver::class.java)
+
+        if (response.statusCode == HttpStatus.OK && response.body != null) {
+            val content = response.body
+            content!!.items.forEach{
+            }
+        }
         return RestTemplate().exchange(requestEntity, LocationSearchResponseForNaver::class.java) as ResponseEntity<LocationSearchResponse>
     }
 

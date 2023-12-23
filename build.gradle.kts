@@ -23,6 +23,8 @@ configurations {
     }
 }
 
+extra["springCloudVersion"] = "2023.0.0"
+
 repositories {
     mavenCentral()
 }
@@ -39,10 +41,23 @@ dependencies {
     kapt("jakarta.annotation:jakarta.annotation-api")
     kapt("jakarta.persistence:jakarta.persistence-api")
 
+    implementation("org.springframework.boot:spring-boot-starter-aop")
+    //implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+    //circuit breaker
+    implementation("io.github.resilience4j:resilience4j-spring-boot2:1.7.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
 }
 
 tasks.withType<KotlinCompile> {

@@ -1,6 +1,14 @@
 package com.sejun.app.client.dto.kakao
 
-import com.sejun.app.client.dto.LocationSearchResponse
+class LocationSearchResponseForKakao {
+    var meta: Any
+    var documents: List<Any>
 
-class LocationSearchResponseForKakao : LocationSearchResponse {
+    constructor(
+        documents: List<Any>,
+        meta: Any
+    ) {
+        this.documents = documents
+        this.meta = meta
+    }
 }

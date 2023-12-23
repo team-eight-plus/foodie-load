@@ -1,22 +1,19 @@
 package com.sejun.app.client.dto.naver
 
-import com.sejun.app.client.dto.LocationSearchResponse
-import lombok.Getter
 
-@Getter
-class LocationSearchResponseForNaver : LocationSearchResponse {
+class LocationSearchResponseForNaver {
     var lastBuildDate: String
     var total: Int
     var start: Int
     var display: Int
-    var items: List<Any>
+    var items: List<SearchItemByNaver>
 
     constructor(
         lastBuildDate: String,
         total: Int,
         start: Int,
         display: Int,
-        items: List<Any>
+        items: List<SearchItemByNaver>
     ) {
         this.lastBuildDate = lastBuildDate
         this.total = total

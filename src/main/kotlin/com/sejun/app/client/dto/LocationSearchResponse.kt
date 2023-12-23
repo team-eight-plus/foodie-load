@@ -1,4 +1,6 @@
 package com.sejun.app.client.dto
 
-interface LocationSearchResponse {
-}
+data class LocationSearchResponse(
+    val items: List<Any>
+)
+
