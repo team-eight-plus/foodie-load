@@ -15,13 +15,16 @@ import java.net.URI
 @Component
 class LocationSearchApiForKakao(
     @Value("\${search.client.kakao.key}") private val key: String,
-)  : LocationSearchApi {
-    override fun search(request: LocationSearchRequest): ResponseEntity<LocationSearchResponse> {
-        return requestLocationSearchApi(createRequestEntity(createURI(request as LocationSearchRequestForKakao)))
+) {
+    fun search(request: LocationSearchRequestForKakao): LocationSearchResponse {
+        request.validate()
+
+        val response = requestLocationSearchApi(createRequestEntity(createURI(request)))
+        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity("KAKAO", response)
     }
 
-    fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponse> {
-        return RestTemplate().exchange(requestEntity, LocationSearchResponseForKakao::class.java) as ResponseEntity<LocationSearchResponse>
+    fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponseForKakao> {
+        return RestTemplate().exchange(requestEntity, LocationSearchResponseForKakao::class.java)
     }
 
     fun createURI(request: LocationSearchRequestForKakao): URI {

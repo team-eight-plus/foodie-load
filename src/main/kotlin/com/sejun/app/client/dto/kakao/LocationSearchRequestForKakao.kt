@@ -1,13 +1,12 @@
 package com.sejun.app.client.dto.kakao
 
-import com.sejun.app.client.dto.LocationSearchRequest
-import lombok.Getter
+import com.sejun.app.exception.CustomErrorStatus
+import com.sejun.app.exception.CustomException
 
-@Getter
-class LocationSearchRequestForKakao : LocationSearchRequest {
+data class LocationSearchRequestForKakao (
     val query: String
-
-    constructor(query: String) {
-        this.query = query
+) {
+    fun validate() {
+        if (query.isEmpty()) throw CustomException(CustomErrorStatus.NO_KEYWORD)
     }
 }

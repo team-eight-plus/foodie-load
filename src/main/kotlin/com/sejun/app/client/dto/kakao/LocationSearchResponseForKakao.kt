@@ -1,14 +1,16 @@
 package com.sejun.app.client.dto.kakao
 
-class LocationSearchResponseForKakao {
-    var meta: Any
-    var documents: List<Any>
+import com.sejun.app.client.dto.LocationSearchItems
 
-    constructor(
-        documents: List<Any>,
-        meta: Any
-    ) {
-        this.documents = documents
-        this.meta = meta
+data class LocationSearchResponseForKakao (
+    var meta: Any,
+    var documents: List<SearchItemByKakao>
+) {
+    fun toLocationSearchItems(): List<LocationSearchItems> {
+        if (documents.isEmpty()) {
+            return ArrayList<LocationSearchItems>()
+        }
+
+        return documents.map{ it.toLocationSearchItems()}
     }
 }

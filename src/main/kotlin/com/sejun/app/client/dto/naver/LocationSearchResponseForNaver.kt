@@ -1,24 +1,19 @@
 package com.sejun.app.client.dto.naver
 
+import com.sejun.app.client.dto.LocationSearchItems
 
-class LocationSearchResponseForNaver {
-    var lastBuildDate: String
-    var total: Int
-    var start: Int
-    var display: Int
+data class LocationSearchResponseForNaver (
+    var lastBuildDate: String,
+    var total: Int,
+    var start: Int,
+    var display: Int,
     var items: List<SearchItemByNaver>
+) {
+    fun toLocationSearchItems(): List<LocationSearchItems> {
+        if (items.isEmpty()) {
+            return ArrayList<LocationSearchItems>()
+        }
 
-    constructor(
-        lastBuildDate: String,
-        total: Int,
-        start: Int,
-        display: Int,
-        items: List<SearchItemByNaver>
-    ) {
-        this.lastBuildDate = lastBuildDate
-        this.total = total
-        this.start = start
-        this.display = display
-        this.items = items
+        return items.map{ it.toLocationSearchItems()}
     }
 }

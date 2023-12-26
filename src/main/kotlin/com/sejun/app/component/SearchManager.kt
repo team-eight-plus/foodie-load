@@ -4,12 +4,12 @@ import com.sejun.app.client.LocationSearchApiForKakao
 import com.sejun.app.client.LocationSearchApiForNaver
 import com.sejun.app.client.dto.LocationSearchRequest
 import com.sejun.app.client.dto.LocationSearchResponse
-import com.sejun.app.exception.CustomErrorStatus
-import com.sejun.app.exception.CustomException
+import com.sejun.app.client.dto.kakao.LocationSearchRequestForKakao
+import com.sejun.app.client.dto.naver.LocationSearchRequestForNaver
+import com.sejun.app.config.CircuitBreakerProvider
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
-import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,32 +18,23 @@ class SearchManager(
     val locationSearchApiForKakao: LocationSearchApiForKakao
 )  {
 
-    fun search(request: LocationSearchRequest): ResponseEntity<LocationSearchResponse> {
-        var searchResponse = requestKakaoLocationSearchApi(request)
-        if (searchResponse.statusCode.value() == HttpServletResponse.SC_OK) {
-            // naver parser
-            return searchResponse
-        }
+    val log: Logger = LoggerFactory.getLogger(SearchManager::class.java)
 
-        searchResponse = requestKakaoLocationSearchApi(request)
-        if (searchResponse.statusCode.value() == HttpServletResponse.SC_OK) {
-            // kakao parser
-            return searchResponse
-        }
-
-        throw CustomException(CustomErrorStatus.NO_SEARCH)
+    @CircuitBreaker(name = CircuitBreakerProvider.CIRCUIT_SEARCH, fallbackMethod = "requestKakaoLocationSearchApi")
+    fun search(request: LocationSearchRequest): LocationSearchResponse {
+        throw RuntimeException("CircuitBreaker fallbackMethod")
+        return locationSearchApiForNaver.search(LocationSearchRequestForNaver(query = request.query))
     }
 
-    @CircuitBreaker(name = "search", fallbackMethod = "requestKakaoLocationSearchApi")
-    fun requestNaverLocationSearchApi(request: LocationSearchRequest):
-            ResponseEntity<LocationSearchResponse> {
-        val response = locationSearchApiForNaver.search(request)
 
+    fun requestNaverLocationSearchApi(request: LocationSearchRequestForNaver):
+            LocationSearchResponse {
         return locationSearchApiForNaver.search(request)
     }
 
-    fun requestKakaoLocationSearchApi(request: LocationSearchRequest):
-            ResponseEntity<LocationSearchResponse> {
-        return locationSearchApiForKakao.search(request)
+    fun requestKakaoLocationSearchApi(request: LocationSearchRequest, e: Throwable):
+            LocationSearchResponse {
+        log.info(e.message)
+        return locationSearchApiForKakao.search(LocationSearchRequestForKakao(query = request.query))
     }
 }

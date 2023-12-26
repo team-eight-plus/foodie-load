@@ -1,12 +1,10 @@
 package com.sejun.app.client
 
-import com.sejun.app.client.dto.LocationSearchRequest
 import com.sejun.app.client.dto.LocationSearchResponse
 import com.sejun.app.client.dto.naver.LocationSearchRequestForNaver
 import com.sejun.app.client.dto.naver.LocationSearchResponseForNaver
 import com.sejun.app.common.constants.LocationSearch
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
@@ -19,22 +17,17 @@ import java.util.*
 class LocationSearchApiForNaver(
     @Value("\${search.client.naver.id}") private val clientId: String,
     @Value("\${search.client.naver.key}") private val clientKey: String
-) : LocationSearchApi {
+) {
 
-    override fun search(request: LocationSearchRequest): ResponseEntity<LocationSearchResponse> {
-         return requestLocationSearchApi(createRequestEntity(createURI(request as LocationSearchRequestForNaver)))
+    fun search(request: LocationSearchRequestForNaver): LocationSearchResponse {
+        request.validate()
+
+        val response = requestLocationSearchApi(createRequestEntity(createURI(request)))
+        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity("NAVER", response)
     }
 
-    fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponse> {
-        val response =
-            RestTemplate().exchange(requestEntity, LocationSearchResponseForNaver::class.java)
-
-        if (response.statusCode == HttpStatus.OK && response.body != null) {
-            val content = response.body
-            content!!.items.forEach{
-            }
-        }
-        return RestTemplate().exchange(requestEntity, LocationSearchResponseForNaver::class.java) as ResponseEntity<LocationSearchResponse>
+    fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponseForNaver> {
+        return RestTemplate().exchange(requestEntity, LocationSearchResponseForNaver::class.java)
     }
 
     fun createURI(request: LocationSearchRequestForNaver): URI {

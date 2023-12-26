@@ -1,4 +1,5 @@
 package com.sejun.app.client.dto
 
-interface LocationSearchRequest {
-}
+data class LocationSearchRequest(
+    val query: String
+)
