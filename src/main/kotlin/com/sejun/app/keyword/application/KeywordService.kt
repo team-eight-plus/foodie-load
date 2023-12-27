@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class KeywordService(
@@ -30,13 +31,14 @@ class KeywordService(
         return keywords.map{ it -> KeywordRankResponse.fromEntity(it)}
     }
 
+    //TODO: Async로 처리해야할지 고민이 필요함.
     @Async
     @EventListener
     fun handleSearchEvent(event: SearchEvent) {
         val findByKeyword = keywordRepository.findByKeyword(event.keyword)
         when (findByKeyword.isPresent) {
             true -> {
-                val keyword =findByKeyword.get()
+                val keyword = findByKeyword.get()
                 keyword.increaseHits()
 
                 keywordRepository.save(keyword)

@@ -22,19 +22,12 @@ class SearchManager(
 
     @CircuitBreaker(name = CircuitBreakerProvider.CIRCUIT_SEARCH, fallbackMethod = "requestKakaoLocationSearchApi")
     fun search(request: LocationSearchRequest): LocationSearchResponse {
-        throw RuntimeException("CircuitBreaker fallbackMethod")
         return locationSearchApiForNaver.search(LocationSearchRequestForNaver(query = request.query))
-    }
-
-
-    fun requestNaverLocationSearchApi(request: LocationSearchRequestForNaver):
-            LocationSearchResponse {
-        return locationSearchApiForNaver.search(request)
     }
 
     fun requestKakaoLocationSearchApi(request: LocationSearchRequest, e: Throwable):
             LocationSearchResponse {
-        log.info(e.message)
+        log.info("called requestKakaoLocationSearchApi")
         return locationSearchApiForKakao.search(LocationSearchRequestForKakao(query = request.query))
     }
 }
