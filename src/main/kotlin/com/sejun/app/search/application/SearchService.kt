@@ -19,6 +19,8 @@ class SearchService(
     fun search(request: LocationSearchRequest): LocationSearchResponse {
         // naver API 요청
         // 키워드 저장
+        //TODO: publishEvent로 처리할지에 대해서 다시 생각 필요.
+        //      처리한다고 하더라도 더 나은 방법은 있을듯
         val response = searchManager.search(request)
         eventPublisher.publishEvent(SearchEvent(keyword = request.query, response = response))
         return response
