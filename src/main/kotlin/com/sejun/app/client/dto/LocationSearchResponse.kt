@@ -2,6 +2,7 @@ package com.sejun.app.client.dto
 
 import com.sejun.app.client.dto.kakao.LocationSearchResponseForKakao
 import com.sejun.app.client.dto.naver.LocationSearchResponseForNaver
+import com.sejun.app.common.constants.LocationSearch
 import com.sejun.app.exception.CustomErrorStatus
 import com.sejun.app.exception.CustomException
 import org.springframework.http.ResponseEntity
@@ -18,12 +19,12 @@ data class LocationSearchResponse(
             }
 
             return when (platformName) {
-                "NAVER" -> {
+                LocationSearch.NAVER -> {
                     val body = responseEntity.body as LocationSearchResponseForNaver
                     LocationSearchResponse(status = responseEntity.statusCode.value(),
                         body?.toLocationSearchItems() ?: ArrayList())
                 }
-                "KAKAO" -> {
+                LocationSearch.KAKAO -> {
                     val body = responseEntity.body as LocationSearchResponseForKakao
                     LocationSearchResponse(status = responseEntity.statusCode.value(),
                         body?.toLocationSearchItems() ?: ArrayList())

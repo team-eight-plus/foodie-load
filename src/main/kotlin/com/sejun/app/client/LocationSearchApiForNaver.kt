@@ -23,7 +23,7 @@ class LocationSearchApiForNaver(
         request.validate()
 
         val response = requestLocationSearchApi(createRequestEntity(createURI(request)))
-        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity("NAVER", response)
+        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity(LocationSearch.NAVER, response)
     }
 
     fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponseForNaver> {

@@ -20,7 +20,7 @@ class LocationSearchApiForKakao(
         request.validate()
 
         val response = requestLocationSearchApi(createRequestEntity(createURI(request)))
-        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity("KAKAO", response)
+        return LocationSearchResponse.convertToLocationSearchResponseByResponseEntity(LocationSearch.KAKAO, response)
     }
 
     fun requestLocationSearchApi(requestEntity: RequestEntity<Void>): ResponseEntity<LocationSearchResponseForKakao> {
