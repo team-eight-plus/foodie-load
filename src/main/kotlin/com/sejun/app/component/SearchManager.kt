@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component
 @Component
 class SearchManager(
     val locationSearchApiForNaver: LocationSearchApiForNaver,
-    val locationSearchApiForKakao: LocationSearchApiForKakao
+    val locationSearchApiForKakao: LocationSearchApiForKakao,
 )  {
 
     val log: Logger = LoggerFactory.getLogger(SearchManager::class.java)
@@ -27,6 +27,7 @@ class SearchManager(
 
     fun requestKakaoLocationSearchApi(request: LocationSearchRequest, e: Throwable):
             LocationSearchResponse {
+        log.error("naver api error !! ${e.message}")
         log.info("called requestKakaoLocationSearchApi")
         return locationSearchApiForKakao.search(LocationSearchRequestForKakao(query = request.query))
     }

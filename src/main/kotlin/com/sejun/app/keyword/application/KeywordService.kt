@@ -2,18 +2,17 @@ package com.sejun.app.keyword.application
 
 import com.sejun.app.exception.CustomErrorStatus
 import com.sejun.app.exception.CustomException
-import com.sejun.app.keyword.domain.Keyword
 import com.sejun.app.keyword.domain.repository.KeywordRepository
 import com.sejun.app.keyword.presentation.KeywordRankResponse
-import com.sejun.app.search.application.SearchEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.context.event.EventListener
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
-import org.springframework.scheduling.annotation.Async
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
+import kotlin.random.Random
 
 @Service
 class KeywordService(
@@ -21,6 +20,11 @@ class KeywordService(
 ) {
     val log: Logger = LoggerFactory.getLogger(KeywordService::class.java)
 
+    companion object {
+        private const val POPULAR_KEYWORD = "POPULAR_KEYWORD"
+    }
+
+    @Cacheable(POPULAR_KEYWORD)
     fun getRank(rank: Int): List<KeywordRankResponse> {
         if (rank < 0) {
             throw CustomException(CustomErrorStatus.ILLEGAL_RANK)
@@ -31,21 +35,8 @@ class KeywordService(
         return keywords.map{ it -> KeywordRankResponse.fromEntity(it)}
     }
 
-    //TODO: Async로 처리해야할지 고민이 필요함.
-    @Async
-    @EventListener
-    fun handleSearchEvent(event: SearchEvent) {
-        val findByKeyword = keywordRepository.findByKeyword(event.keyword)
-        when (findByKeyword.isPresent) {
-            true -> {
-                val keyword = findByKeyword.get()
-                keyword.increaseHits()
-
-                keywordRepository.save(keyword)
-            }
-            else -> {
-                keywordRepository.save(Keyword(keyword = event.keyword, 1))
-            }
-        }
+    @CacheEvict(POPULAR_KEYWORD)
+    @Scheduled(cron = "* */10 * * * *")
+    fun evictPopularKeywordCache() {
     }
 }
