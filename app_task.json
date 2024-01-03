@@ -1,5 +1,5 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:792280166714:task-definition/app_tesk:3",
+  "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:792280166714:task-definition/app_tesk:1",
   "containerDefinitions": [
     {
       "name": "ecsContainer",
