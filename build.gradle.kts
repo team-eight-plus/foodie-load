@@ -57,6 +57,9 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
 
+    implementation(group = "ca.pjer", name = "logback-awslogs-appender", version = "1.6.0")
+    implementation("org.codehaus.janino:janino:3.1.7")
+
     testImplementation("io.mockk:mockk:1.13.4")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
