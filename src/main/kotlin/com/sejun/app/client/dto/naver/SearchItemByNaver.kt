@@ -15,7 +15,7 @@ data class SearchItemByNaver (
 ) {
     fun toLocationSearchItems(): LocationSearchItems {
         return LocationSearchItems(
-            title = title,
+            keyword = title,
             link= link,
             category = category,
             address = address,

@@ -38,7 +38,7 @@ data class SearchItemByKakao (
     fun toLocationSearchItems(): LocationSearchItems {
 
         return LocationSearchItems(
-            title = placeName,
+            keyword = placeName,
             link = placeUrl,
             category = categoryName,
             address = addressName,
